@@ -310,32 +310,6 @@ const tunes = {
 15500`
 };
 
-const levels = [
-  {
-    onLoad() {
-      new Controllable(5, 4, 'right');
-
-      addText('Choose commands\nfrom the palette!', {
-        x: 1,
-        y: 9,
-        color: color`5`
-      });
-    },
-    map: map`
-..............
-88888888888888
-..............
-....888888....
-....8....8....
-....888888....
-..............
-..............
-88888888888888
-..............
-..............`
-  }
-];
-
 const inputs = {
   menuLeft: 'a',
   menuRight: 'd',
@@ -490,6 +464,34 @@ class Command extends GameObject {
   }
 }
 
+const levels = [
+  {
+    onLoad() {
+      new Controllable(5, 4, 'right');
+
+      addText('Choose commands\nfrom the palette!', {
+        x: 1,
+        y: 9,
+        color: color`5`
+      });
+    },
+    commands: [ Command.commandTypes.moveDown ],
+    commandSlots: 3,
+    map: map`
+..............
+88888888888888
+..............
+....888888....
+....8....8....
+....888888....
+..............
+..............
+88888888888888
+..............
+..............`
+  }
+];
+
 let level = 0;
 
 const hud = {
@@ -521,16 +523,15 @@ const hud = {
     });
 
     // Commands
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < levels[level].commandSlots; i++) {
       this.commandSlots.push(new Command(i + 1, 0, Command.commandTypes.empty, false));
     }
 
     this.selected = 0;
-    this.commands = [
-      new Command(1, 9, Command.commandTypes.moveDown, true),
-      new Command(2, 9, Command.commandTypes.erase, false),
-      new Command(3, 9, Command.commandTypes.run, false)
-    ];
+    this.commands = levels[level].commands.map((type, index) => new Command(index + 1, 9, type, index === 0));
+    this.commands.push(new Command(this.commands.length + 1, 9, Command.commandTypes.erase, false));
+    this.commands.push(new Command(this.commands.length + 1, 9, Command.commandTypes.run, false));
+    
     this.canSelect = true;
   },
 
@@ -554,6 +555,8 @@ const hud = {
   },
 
   selectCommand() {
+    if (!this.canSelect) return;
+    
     playTune(tunes.confirm);
     
     if (this.commands[this.selected].type === Command.commandTypes.erase) {
