@@ -386,6 +386,20 @@ class GameObject {
     return GameObject.#objects.filter((obj) => obj instanceof type);
   }
 
+  static step() {
+    GameObject.#objects.forEach((obj) => obj.onStep());
+  }
+
+  onStep() {
+    GameObject.#objects.forEach((obj) => {
+      if (obj !== this && obj.x === this.x && obj.y === this.y) {
+        this.onOverlap(obj);
+      }
+    });
+  }
+
+  onOverlap(other) {}
+
   remove() {
     // Maybe keep track if removed, and prevent operations on object if so?
     this.#sprigSprite.remove();
@@ -519,6 +533,10 @@ class Scrap extends GameObject {
 
     super(x, y, Scrap.sprites.code);
   }
+
+  onOverlap(other) {
+    if (other instanceof Controllable) this.remove();
+  }
 }
 
 const levels = [
@@ -627,6 +645,8 @@ const hud = {
 
       const step = (state) => () => {
         this.commandSlots[state.instr].execute();
+
+        GameObject.step();
 
         // No loop ends or anything. Proceed to next instruction.
         if (state.instr !== this.commandSlots.length - 1) setTimeout(step({ instr: state.instr + 1 }), 500);
