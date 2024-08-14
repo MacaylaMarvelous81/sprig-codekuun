@@ -341,6 +341,7 @@ class GameObject {
   static solid = false;
 
   static #solidSprites = [ bitmaps.barrier.key ];
+  static #objects = [];
 
   get x() { return this.#sprigSprite.x; }
   set x(val) { this.#sprigSprite.x = val; }
@@ -368,6 +369,8 @@ class GameObject {
     this.#sprigSprite = getTile(0, 0)[0];
     this.x = x;
     this.y = y;
+
+    GameObject.#objects.push(this);
   }
 
   static register(obj) {
@@ -379,9 +382,15 @@ class GameObject {
     };
   }
 
+  static getObjectsOfType(type) {
+    return GameObject.#objects.filter((obj) => obj instanceof type);
+  }
+
   remove() {
     // Maybe keep track if removed, and prevent operations on object if so?
     this.#sprigSprite.remove();
+
+    GameObject.#objects.splice(GameObject.#objects.indexOf(this), 1);
   }
 }
 
@@ -477,6 +486,15 @@ class Command extends GameObject {
 
     this.#type = type;
     this.#selected = selected;
+  }
+
+  execute() {
+    switch (this.#type) {
+      case Command.commandTypes.move:
+        GameObject.getObjectsOfType(Controllable).forEach((controllable) => controllable.move(controllable.direction));
+      default:
+        break;
+    }
   }
 
   #updateSprite() {
@@ -606,6 +624,15 @@ const hud = {
     } else if (this.commands[this.selected].type === Command.commandTypes.run) {
       this.canSelect = false;
       this.commands[this.selected].selected = false;
+
+      const step = (state) => () => {
+        this.commandSlots[state.instr].execute();
+
+        // No loop ends or anything. Proceed to next instruction.
+        if (state.instr !== this.commandSlots.length - 1) setTimeout(step({ instr: state.instr + 1 }), 500);
+      };
+
+      step({ instr: 0 })();
     } else {
       if (this.currentSlot === this.commandSlots.length) return;
       
