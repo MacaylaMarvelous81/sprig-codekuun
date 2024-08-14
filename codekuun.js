@@ -139,42 +139,42 @@ const bitmaps = {
 .......00.......
 ................`
   },
-  commandMoveDown: {
+  commandMove: {
     key: '6',
     sprite: bitmap`
 .22222222222222.
 2277777777777722
 2777777777777772
-2777777557777772
-2777777557777772
-2777777557777772
-2777777557777772
-2777777557777772
-2777577557757772
-2777555555557772
-2777755555577772
-2777775555777772
-2777777557777772
+2777777777777772
+2777777755777772
+2777777775577772
+2777777775557772
+2775555555555772
+2775555555555772
+2777777775557772
+2777777775577772
+2777777755777772
+2777777777777772
 2777777777777772
 2277777777777722
 .22222222222222.`
   },
-  commandMoveDownSelected: {
+  commandMoveSelected: {
     key: '9',
     sprite: bitmap`
 .66666666666666.
 6677777777777766
 6777777777777776
-6777777557777776
-6777777557777776
-6777777557777776
-6777777557777776
-6777777557777776
-6777577557757776
-6777555555557776
-6777755555577776
-6777775555777776
-6777777557777776
+6777777777777776
+6777777755777776
+6777777775577776
+6777777775557776
+6775555555555776
+6775555555555776
+6777777775557776
+6777777775577776
+6777777755777776
+6777777777777776
 6777777777777776
 6677777777777766
 .66666666666666.`
@@ -407,8 +407,8 @@ class Controllable extends GameObject {
 class Command extends GameObject {
   static sprites = {
     empty: bitmaps.commandEmpty.key,
-    moveDown: bitmaps.commandMoveDown.key,
-    moveDownSelected: bitmaps.commandMoveDownSelected.key,
+    move: bitmaps.commandMove.key,
+    moveSelected: bitmaps.commandMoveSelected.key,
     erase: bitmaps.commandErase.key,
     eraseSelected: bitmaps.commandEraseSelected.key,
     run: bitmaps.commandRun.key,
@@ -424,9 +424,9 @@ class Command extends GameObject {
       default: Command.sprites.empty,
       selected: null
     },
-    moveDown: {
-      default: Command.sprites.moveDown,
-      selected: Command.sprites.moveDownSelected
+    move: {
+      default: Command.sprites.move,
+      selected: Command.sprites.moveSelected
     },
     erase: {
       default: Command.sprites.erase,
@@ -475,7 +475,7 @@ const levels = [
         color: color`5`
       });
     },
-    commands: [ Command.commandTypes.moveDown ],
+    commands: [ Command.commandTypes.move ],
     commandSlots: 3,
     map: map`
 ..............
