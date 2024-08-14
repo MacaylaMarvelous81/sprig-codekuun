@@ -298,6 +298,26 @@ const bitmaps = {
 ..3..........3..
 ...3........3...
 ....33333333....`
+  },
+  scrapCode: {
+    key: 'w',
+    sprite: bitmap`
+................
+.00000000000000.
+.00000000000000.
+.00000000000000.
+.0D000000000000.
+.00D00000000000.
+.000D0000000000.
+.0000D000000000.
+.000D0000000000.
+.00D00000000000.
+.0D0000D0D0D0D0.
+.00000000000000.
+.00000000000000.
+.00000000000000.
+.00000000000000.
+................`
   }
 };
 
@@ -464,10 +484,30 @@ class Command extends GameObject {
   }
 }
 
+class Scrap extends GameObject {
+  static sprites = {
+    code: bitmaps.scrapCode.key
+  };
+  static solid = false;
+  static {
+    GameObject.register(Scrap);
+  }
+
+  constructor(x, y) {
+    /*
+    const sprite = Math.floor(Math.random() * 2);
+    super(x, y, sprite === 1 ? Scrap.sprites.code
+    */
+
+    super(x, y, Scrap.sprites.code);
+  }
+}
+
 const levels = [
   {
     onLoad() {
       new Controllable(5, 4, 'right');
+      new Scrap(8, 4);
 
       addText('Choose commands\nfrom the palette!', {
         x: 1,
