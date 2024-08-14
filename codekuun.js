@@ -327,7 +327,14 @@ const tunes = {
 8454.545454545456`,
   confirm: tune`
 500: A5-500,
-15500`
+15500`,
+  collect: tune`
+82.1917808219178: F5/82.1917808219178,
+82.1917808219178: F5/82.1917808219178,
+82.1917808219178: A5/82.1917808219178,
+82.1917808219178: A5/82.1917808219178,
+82.1917808219178: A5/82.1917808219178,
+2219.1780821917805`
 };
 
 const inputs = {
@@ -535,6 +542,8 @@ class Scrap extends GameObject {
   }
 
   onOverlap(other) {
+    playTune(tunes.collect);
+    
     if (other instanceof Controllable) this.remove();
   }
 }
