@@ -550,9 +550,9 @@ class Scrap extends GameObject {
 
 const levels = [
   {
-    onLoad() {
-      new Controllable(5, 4, 'right');
-      new Scrap(8, 4);
+    onLoad(ephemeralObjects) {
+      ephemeralObjects.push(new Controllable(5, 4, 'right'));
+      ephemeralObjects.push(new Scrap(8, 4));
 
       addText('Choose commands\nfrom the palette!', {
         x: 1,
@@ -579,7 +579,7 @@ const levels = [
 
 let level = 0;
 
-const hud = {
+const game = {
   inputHintSelect: null,
   inputHintConfirm: null,
   commands: [],
@@ -587,6 +587,7 @@ const hud = {
   selected: 0,
   currentSlot: 0,
   canSelect: false,
+  ephemeralObjects: [],
   
   reset() {
     if (this.inputHintSelect) this.inputHintSelect.remove();
@@ -608,6 +609,7 @@ const hud = {
     });
 
     // Commands
+    this.currentSlot = 0;
     for (let i = 0; i < levels[level].commandSlots; i++) {
       this.commandSlots.push(new Command(i + 1, 0, Command.commandTypes.empty, false));
     }
@@ -656,9 +658,11 @@ const hud = {
         this.commandSlots[state.instr].execute();
 
         GameObject.step();
-
+        
         // No loop ends or anything. Proceed to next instruction.
-        if (state.instr !== this.commandSlots.length - 1) setTimeout(step({ instr: state.instr + 1 }), 500);
+        if (state.instr !== this.commandSlots.length - 1) {
+          setTimeout(step({ instr: state.instr + 1 }), 500);
+        }
       };
 
       step({ instr: 0 })();
@@ -667,6 +671,13 @@ const hud = {
       
       this.commandSlots[this.currentSlot++].type = this.commands[this.selected].type;
     }
+  },
+
+  reloadLevel(level) {
+    this.ephemeralObjects.forEach((obj) => obj.remove());
+    setMap(level.map);
+    level.onLoad(this.ephemeralObjects);
+    this.reset();
   }
 };
 
@@ -674,14 +685,8 @@ const legend = [];
 for (const item in bitmaps) legend.push([ bitmaps[item].key, bitmaps[item].sprite ]);
 setLegend(...legend);
 
-function reloadLevel(level) {
-  setMap(level.map);
-  level.onLoad();
-  hud.reset();
-}
+game.reloadLevel(levels[level]);
 
-reloadLevel(levels[level]);
-
-onInput(inputs.menuLeft, () => hud.moveSelection('left'));
-onInput(inputs.menuRight, () => hud.moveSelection('right'));
-onInput(inputs.menuConfirm, () => hud.selectCommand());
+onInput(inputs.menuLeft, () => game.moveSelection('left'));
+onInput(inputs.menuRight, () => game.moveSelection('right'));
+onInput(inputs.menuConfirm, () => game.selectCommand());
