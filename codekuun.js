@@ -279,6 +279,26 @@ const bitmaps = {
 6644444444444466
 .66666666666666.`
   },
+  commandTurnRight: {
+    key: 'e',
+    sprite: bitmap`
+.22222222222222.
+2244444444444422
+2444444444444442
+2444422222444442
+2444244444444442
+2442444444444442
+2442444444444442
+2442444444442442
+2442444444442442
+2442444444442442
+2442444444442442
+2444244444424442
+2444422222244442
+2444444444444442
+2244444444444422
+.22222222222222.`
+  },
   barrier: {
     key: '8',
     sprite: bitmap`
@@ -574,6 +594,25 @@ const levels = [
 88888888888888
 ..............
 ..............`
+  },
+  {
+    onLoad(ephemeralObjects) {
+      ephemeralObjects.push(new Controllable(4, 5, 'up'));
+    },
+    commands: [ Command.commandTypes.move ],
+    commandSlots: 9,
+    map: map`
+..............
+88888888888888
+..............
+...88888888...
+...8,,,...8...
+...8.8888.8...
+...888..888...
+..............
+88888888888888
+..............
+..............`
   }
 ];
 
@@ -659,9 +698,19 @@ const game = {
 
         GameObject.step();
         
-        // No loop ends or anything. Proceed to next instruction.
         if (state.instr !== this.commandSlots.length - 1) {
+          // No loop ends or anything. Proceed to next instruction.
           setTimeout(step({ instr: state.instr + 1 }), 500);
+        } else {
+          const scrapCount = GameObject.getObjectsOfType(Scrap).length;
+
+          // Reload the level or load the next level depending if all scraps were successfully
+          // collected or not
+          if (scrapCount === 0) {
+            this.reloadLevel(levels[++level]);
+          } else {
+            this.reloadLevel(levels[level]);
+          }
         }
       };
 
@@ -674,6 +723,7 @@ const game = {
   },
 
   reloadLevel(level) {
+    clearText();
     this.ephemeralObjects.forEach((obj) => obj.remove());
     setMap(level.map);
     level.onLoad(this.ephemeralObjects);
