@@ -285,19 +285,39 @@ const bitmaps = {
 .22222222222222.
 2244444444444422
 2444444444444442
-2444422222444442
-2444244444444442
+2444422222244442
+2444244444424442
+2442444444442442
+2442444444242422
+2442444444422242
+2442444444442442
 2442444444444442
-2442444444444442
-2442444444442442
-2442444444442442
-2442444444442442
 2442444444442442
 2444244444424442
 2444422222244442
 2444444444444442
 2244444444444422
 .22222222222222.`
+  },
+  commandTurnRightSelected: {
+    key: 'r',
+    sprite: bitmap`
+.66666666666666.
+6644444444444466
+6444444444444446
+6444422222244446
+6444244444424446
+6442444444442446
+6442444444242426
+6442444444422246
+6442444444442446
+6442444444444446
+6442444444442446
+6444244444424446
+6444422222244446
+6444444444444446
+6644444444444466
+.66666666666666.`
   },
   barrier: {
     key: '8',
@@ -447,29 +467,52 @@ class Controllable extends GameObject {
     GameObject.register(Controllable);
   }
 
-  direction = 'down';
+  #direction;
+  get direction() { return this.#direction; }
+  set direction(val) {
+    this.#direction = val;
+    this.sprite = Controllable.sprites[val];
+  }
   
   constructor(x, y, dir) {
-    let sprite = Controllable.sprites[dir] || Controllable.sprites.down;
+    let sprite = Controllable.sprites[dir];
     
     super(x, y, sprite);
 
-    this.direction = dir;
+    this.#direction = dir;
   }
 
   move(direction) {
     if (direction === 'up') {
-      this.sprite = Controllable.sprites.up;
       this.y -= 1;
     } else if (direction === 'down') {
-      this.sprite = Controllable.sprites.down;
       this.y += 1;
     } else if (direction === 'left') {
-      this.sprite = Controllable.sprites.left;
       this.x -= 1;
     } else if (direction === 'right') {
-      this.sprite = Controllable.sprites.right;
       this.x += 1;
+    }
+  }
+
+  turn(direction) {
+    // right turns in the clockwise direction, left turns counterclockwise
+    switch (this.direction) {
+      case 'up':
+        if (direction === 'right') this.direction = 'right';
+        if (direction === 'left') this.direction = 'left';
+        break;
+      case 'down':
+        if (direction === 'right') this.direction = 'left';
+        if (direction === 'left') this.direction = 'right';
+        break;
+      case 'left':
+        if (direction === 'right') this.direction = 'up';
+        if (direction === 'left') this.direction = 'down';
+        break;
+      case 'right':
+        if (direction === 'right') this.direction = 'down';
+        if (direction === 'left') this.direction = 'up';
+        break;
     }
   }
 }
@@ -482,7 +525,9 @@ class Command extends GameObject {
     erase: bitmaps.commandErase.key,
     eraseSelected: bitmaps.commandEraseSelected.key,
     run: bitmaps.commandRun.key,
-    runSelected: bitmaps.commandRunSelected.key
+    runSelected: bitmaps.commandRunSelected.key,
+    turnRight: bitmaps.commandTurnRight.key,
+    turnRightSelected: bitmaps.commandTurnRightSelected.key
   };
   static solid = false;
   static {
@@ -505,6 +550,10 @@ class Command extends GameObject {
     run: {
       default: Command.sprites.run,
       selected: Command.sprites.runSelected
+    },
+    turnRight: {
+      default: Command.sprites.turnRight,
+      selected: Command.sprites.turnRightSelected
     }
   };
 
@@ -530,9 +579,14 @@ class Command extends GameObject {
   }
 
   execute() {
+    // Maybe define behavior in command type object?
     switch (this.#type) {
       case Command.commandTypes.move:
         GameObject.getObjectsOfType(Controllable).forEach((controllable) => controllable.move(controllable.direction));
+        break;
+      case Command.commandTypes.turnRight:
+        GameObject.getObjectsOfType(Controllable).forEach((controllable) => controllable.turn('right'));
+        break;
       default:
         break;
     }
@@ -598,8 +652,9 @@ const levels = [
   {
     onLoad(ephemeralObjects) {
       ephemeralObjects.push(new Controllable(4, 5, 'up'));
+      ephemeralObjects.push(new Scrap(9, 5));
     },
-    commands: [ Command.commandTypes.move ],
+    commands: [ Command.commandTypes.move, Command.commandTypes.turnRight ],
     commandSlots: 9,
     map: map`
 ..............
@@ -649,6 +704,7 @@ const game = {
 
     // Commands
     this.currentSlot = 0;
+    this.commandSlots = [];
     for (let i = 0; i < levels[level].commandSlots; i++) {
       this.commandSlots.push(new Command(i + 1, 0, Command.commandTypes.empty, false));
     }
