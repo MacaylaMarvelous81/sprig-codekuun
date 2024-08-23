@@ -506,6 +506,34 @@ const inputs = {
   valueDown: 's'
 };
 
+const textManager = {
+  texts: [],
+  
+  addText(info) {
+    const id = this.texts.push(info);
+    this.updateText();
+    return id;
+  },
+
+  removeText(index) {
+    this.texts.splice(index, 1);
+
+    this.updateText();
+  },
+
+  updateText() {
+    clearText();
+
+    this.texts.forEach((text) => {
+      addText(text.text, {
+        x: text.x,
+        y: text.y,
+        color: text.color
+      });
+    });
+  }
+}
+
 class GameObject {
   static sprites = {};
   static solid = false;
@@ -694,6 +722,7 @@ class Command extends GameObject {
 
   #type = '';
   #selected = false;
+  #value = 0;
 
   get type() { return this.#type; }
   set type(val) {
@@ -759,15 +788,16 @@ class Scrap extends GameObject {
 
 const levels = [
   {
-    onLoad(ephemeralObjects) {
+    onLoad(ephemeralObjects, ephemeralText) {
       ephemeralObjects.push(new Controllable(5, 4, 'right'));
       ephemeralObjects.push(new Scrap(8, 4));
 
-      addText('Choose commands\nfrom the palette!', {
+      ephemeralText.push(textManager.addText({
+        text: 'Choose commands\nfrom the palette!',
         x: 1,
         y: 9,
         color: color`5`
-      });
+      }));
     },
     commands: [ Command.commandTypes.move ],
     commandSlots: 3,
@@ -785,7 +815,7 @@ const levels = [
 ..............`
   },
   {
-    onLoad(ephemeralObjects) {
+    onLoad(ephemeralObjects, ephemeralText) {
       ephemeralObjects.push(new Controllable(4, 5, 'up'));
       ephemeralObjects.push(new Scrap(9, 5));
     },
@@ -805,16 +835,17 @@ const levels = [
 ..............`
   },
   {
-    onLoad(ephemeralObjects) {
+    onLoad(ephemeralObjects, ephemeralText) {
       ephemeralObjects.push(new Controllable(2, 4, 'right'));
       ephemeralObjects.push(new Scrap(11, 4));
 
       ephemeralObjects.push(new GameObject(1, 7, bitmaps.inputLeftVertical.key));
-      addText('set loop amount', {
+      ephemeralText.push(textManager.addText({
+        text: 'set loop amount',
         x: 3,
         y: 10,
         color: color`5`
-      });
+      }));
     },
     commands: [ Command.commandTypes.move, Command.commandTypes.loop, Command.commandTypes.loopEnd ],
     commandSlots: 12,
@@ -838,16 +869,21 @@ let level = 0;
 const game = {
   inputHintSelect: null,
   inputHintConfirm: null,
+  selectText: null,
+  confirmText: null,
   commands: [],
   commandSlots: [],
   selected: 0,
   currentSlot: 0,
   canSelect: false,
   ephemeralObjects: [],
+  ephemeralText: [],
   
   reset() {
     if (this.inputHintSelect) this.inputHintSelect.remove();
     if (this.inputHintConfirm) this.inputHintConfirm.remove();
+    if (this.selectText !== null) textManager.removeText(this.selectText);
+    if (this.confirmText !== null) textManager.removeText(this.confirmText);
     this.commands.forEach((obj) => obj.remove());
     this.commandSlots.forEach((obj) => obj.remove());
 
@@ -855,11 +891,13 @@ const game = {
     this.inputHintSelect = new GameObject(0, 10, bitmaps.inputLeftHorizontal.key);
     this.inputHintConfirm = new GameObject(7, 10, bitmaps.inputRightDown.key);
 
-    addText('Select', {
+    this.selectText = textManager.addText({
+      text: 'Select',
       x: 2,
       y: 15
     });
-    addText('Confirm', {
+    this.confirmText = textManager.addText({
+      text: 'Confirm',
       x: 12,
       y: 15
     });
@@ -940,11 +978,24 @@ const game = {
     }
   },
 
+  incrementSelectedValue() {
+    if (!this.canSelect) return;
+
+    if (this.commands[this.selected].incrementValue()) playTune(tunes.select);
+  },
+
+  decrementSelectedValue() {
+    if (!this.canSelect) return;
+
+    if (this.commands[this.selected].decrementValue()) playTune(tunes.select);
+  },
+
   reloadLevel(level) {
-    clearText();
     this.ephemeralObjects.forEach((obj) => obj.remove());
+    this.ephemeralText.forEach((id) => textManager.removeText(id));
+    this.ephemeralText = [];
     setMap(level.map);
-    level.onLoad(this.ephemeralObjects);
+    level.onLoad(this.ephemeralObjects, this.ephemeralText);
     this.reset();
   }
 };
@@ -957,4 +1008,6 @@ game.reloadLevel(levels[level]);
 
 onInput(inputs.menuLeft, () => game.moveSelection('left'));
 onInput(inputs.menuRight, () => game.moveSelection('right'));
+onInput(inputs.valueUp, () => game.incrementSelectedValue());
+onInput(inputs.valueDown, () => game.decrementSelectedValue());
 onInput(inputs.menuConfirm, () => game.selectCommand());
