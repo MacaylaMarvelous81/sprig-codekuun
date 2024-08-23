@@ -119,6 +119,26 @@ const bitmaps = {
 .......00.......
 ................`
   },
+  inputLeftVertical: {
+    key: 't',
+    sprite: bitmap`
+................
+.......00.......
+......0LL0......
+......0LL0......
+.......00.......
+................
+..00..0.....00..
+.0220.0....0220.
+.0220.0....0220.
+..00..0000..00..
+................
+.......00.......
+......0LL0......
+......0LL0......
+.......00.......
+................`
+  },
   inputRightDown: {
     key: '5',
     sprite: bitmap`
@@ -284,17 +304,17 @@ const bitmaps = {
     sprite: bitmap`
 .22222222222222.
 2244444444444422
-2444444444444442
-2444422222244442
-2444244444424442
-2442444444442442
-2442444444242422
-2442444444422242
-2442444444442442
+2444444442444442
+2444444444244442
+2444422222224442
+2444244444244442
+2442444442444442
 2442444444444442
-2442444444442442
-2444244444424442
-2444422222244442
+2442444444444442
+2442444444444442
+2442444444444442
+2442444444444442
+2444444444444442
 2444444444444442
 2244444444444422
 .22222222222222.`
@@ -304,19 +324,59 @@ const bitmaps = {
     sprite: bitmap`
 .66666666666666.
 6644444444444466
-6444444444444446
-6444422222244446
-6444244444424446
-6442444444442446
-6442444444242426
-6442444444422246
-6442444444442446
+6444444442444446
+6444444444244446
+6444422222224446
+6444244444244446
+6442444442444446
 6442444444444446
-6442444444442446
-6444244444424446
-6444422222244446
+6442444444444446
+6442444444444446
+6442444444444446
+6442444444444446
+6444444444444446
 6444444444444446
 6644444444444466
+.66666666666666.`
+  },
+  commandLoop: {
+    key: 'y',
+    sprite: bitmap`
+.22222222222222.
+22FFFFFFFFFFFF22
+2FF0000000000FF2
+2F0FFFFFFFFF0FF2
+2F0FFFFFFF000002
+2F0FFFFFFFF000F2
+2F0FFFFFFFFF0FF2
+2F0FFFFFFFFFFFF2
+2F0FFFFFFFFFFFF2
+2F0FFFFFFFFFFFF2
+2F0FFFFFFFFFFFF2
+2F0FFFFFFFFFFFF2
+2F0FFFFFFFFFFFF2
+2FF0000000000FF2
+22FFFFFFFFFFFF22
+.22222222222222.`
+  },
+  commandLoopSelected: {
+    key: 'u',
+    sprite: bitmap`
+.66666666666666.
+66FFFFFFFFFFFF66
+6FF0000000000FF6
+6F0FFFFFFFFF0FF6
+6F0FFFFFFF000006
+6F0FFFFFFFF000F6
+6F0FFFFFFFFF0FF6
+6F0FFFFFFFFFFFF6
+6F0FFFFFFFFFFFF6
+6F0FFFFFFFFFFFF6
+6F0FFFFFFFFFFFF6
+6F0FFFFFFFFFFFF6
+6F0FFFFFFFFFFFF6
+6FF0000000000FF6
+66FFFFFFFFFFFF66
 .66666666666666.`
   },
   barrier: {
@@ -361,6 +421,27 @@ const bitmaps = {
   }
 };
 
+/*
+commandTurnRight
+bitmap`
+.22222222222222.
+2244444444444422
+2444444444444442
+2444422222244442
+2444244444424442
+2442444444442442
+2442444444242422
+2442444444422242
+2442444444442442
+2442444444444442
+2442444444442442
+2444244444424442
+2444422222244442
+2444444444444442
+2244444444444422
+.22222222222222.`
+*/
+
 const tunes = {
   select: tune`
 272.72727272727275: E5/272.72727272727275,
@@ -380,7 +461,9 @@ const tunes = {
 const inputs = {
   menuLeft: 'a',
   menuRight: 'd',
-  menuConfirm: 'k'
+  menuConfirm: 'k',
+  valueUp: 'w',
+  valueDown: 's'
 };
 
 class GameObject {
@@ -527,7 +610,9 @@ class Command extends GameObject {
     run: bitmaps.commandRun.key,
     runSelected: bitmaps.commandRunSelected.key,
     turnRight: bitmaps.commandTurnRight.key,
-    turnRightSelected: bitmaps.commandTurnRightSelected.key
+    turnRightSelected: bitmaps.commandTurnRightSelected.key,
+    loop: bitmaps.commandLoop.key,
+    loopSelected: bitmaps.commandLoopSelected.key
   };
   static solid = false;
   static {
@@ -554,6 +639,10 @@ class Command extends GameObject {
     turnRight: {
       default: Command.sprites.turnRight,
       selected: Command.sprites.turnRightSelected
+    },
+    loop: {
+      default: Command.sprites.loop,
+      selected: Command.sprites.loopSelected
     }
   };
 
@@ -664,6 +753,33 @@ const levels = [
 ...8,,,...8...
 ...8.8888.8...
 ...888..888...
+..............
+88888888888888
+..............
+..............`
+  },
+  {
+    onLoad(ephemeralObjects) {
+      ephemeralObjects.push(new Controllable(2, 4, 'right'));
+      ephemeralObjects.push(new Scrap(11, 4));
+
+      ephemeralObjects.push(new GameObject(1, 7, bitmaps.inputLeftVertical.key));
+      addText('set loop amount', {
+        x: 3,
+        y: 10,
+        color: color`5`
+      });
+    },
+    commands: [ Command.commandTypes.move ],
+    commandSlots: 12,
+    map: map`
+..............
+88888888888888
+..............
+.888888888888.
+.8..........8.
+.888888888888.
+..............
 ..............
 88888888888888
 ..............
