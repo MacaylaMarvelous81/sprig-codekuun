@@ -379,6 +379,46 @@ const bitmaps = {
 66FFFFFFFFFFFF66
 .66666666666666.`
   },
+  commandLoopEnd: {
+    key: 'i',
+    sprite: bitmap`
+.22222222222222.
+22FFFFFFFFFFFF22
+2FFFFF00FFFFFFF2
+2FFFFFF00FFFFFF2
+2FFFFFF00FFFFFF2
+2FFFFFF00FFFFFF2
+2FFFFFF00FFFFFF2
+2FFFFFFF00FFFFF2
+2FFFFFFF00FFFFF2
+2FFFFFF00FFFFFF2
+2FFFFFF00FFFFFF2
+2FFFFFF00FFFFFF2
+2FFFFFF00FFFFFF2
+2FFFFF00FFFFFFF2
+22FFFFFFFFFFFF22
+.22222222222222.`
+  },
+  commandLoopEndSelected: {
+    key: 'o',
+    sprite: bitmap`
+.66666666666666.
+66FFFFFFFFFFFF66
+6FFFFF00FFFFFFF6
+6FFFFFF00FFFFFF6
+6FFFFFF00FFFFFF6
+6FFFFFF00FFFFFF6
+6FFFFFF00FFFFFF6
+6FFFFFFF00FFFFF6
+6FFFFFFF00FFFFF6
+6FFFFFF00FFFFFF6
+6FFFFFF00FFFFFF6
+6FFFFFF00FFFFFF6
+6FFFFFF00FFFFFF6
+6FFFFF00FFFFFFF6
+66FFFFFFFFFFFF66
+.66666666666666.`
+  },
   barrier: {
     key: '8',
     sprite: bitmap`
@@ -612,7 +652,9 @@ class Command extends GameObject {
     turnRight: bitmaps.commandTurnRight.key,
     turnRightSelected: bitmaps.commandTurnRightSelected.key,
     loop: bitmaps.commandLoop.key,
-    loopSelected: bitmaps.commandLoopSelected.key
+    loopSelected: bitmaps.commandLoopSelected.key,
+    loopEnd: bitmaps.commandLoopEnd.key,
+    loopEndSelected: bitmaps.commandLoopEndSelected.key
   };
   static solid = false;
   static {
@@ -643,6 +685,10 @@ class Command extends GameObject {
     loop: {
       default: Command.sprites.loop,
       selected: Command.sprites.loopSelected
+    },
+    loopEnd: {
+      default: Command.sprites.loopEnd,
+      selected: Command.sprites.loopEndSelected
     }
   };
 
@@ -770,7 +816,7 @@ const levels = [
         color: color`5`
       });
     },
-    commands: [ Command.commandTypes.move ],
+    commands: [ Command.commandTypes.move, Command.commandTypes.loop, Command.commandTypes.loopEnd ],
     commandSlots: 12,
     map: map`
 ..............
