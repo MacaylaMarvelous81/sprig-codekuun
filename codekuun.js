@@ -506,6 +506,63 @@ const inputs = {
   valueDown: 's'
 };
 
+class Text {
+  static #instances = [];
+
+  #text;
+  #x;
+  #y;
+  #color;
+
+  get text() { return this.#text; }
+  set text(val) {
+    this.#text = val;
+    Text.#updateText();
+  }
+  get x() { return this.#x; }
+  set x(val) {
+    this.#x = val;
+    Text.#updateText();
+  }
+  get y() { return this.#y; }
+  set y(val) {
+    this.#y = val;
+    Text.#updateText();
+  }
+  get color() { return this.#color; }
+  set color(val) {
+    this.#color = val;
+    Text.#updateText();
+  }
+
+  constructor(text, x, y, color) {
+    this.#text = text;
+    this.#x = x;
+    this.#y = y;
+    this.#color = color;
+
+    Text.#instances.push(this);
+    Text.#updateText();
+  }
+
+  remove() {
+    Text.#instances.splice(Text.#instances.indexOf(this), 1);
+
+    Text.#updateText();
+  }
+
+  static #updateText() {
+    clearText();
+    
+    Text.#instances.forEach((text) => {
+      addText(text.text, {
+        x: text.x,
+        y: text.y,
+        color: text.color
+      });
+    });
+  }
+}
 const textManager = {
   texts: [],
   
@@ -794,12 +851,7 @@ const levels = [
       ephemeralObjects.push(new Controllable(5, 4, 'right'));
       ephemeralObjects.push(new Scrap(8, 4));
 
-      ephemeralText.push(textManager.addText({
-        text: 'Choose commands\nfrom the palette!',
-        x: 1,
-        y: 9,
-        color: color`5`
-      }));
+      ephemeralText.push(new Text('Choose commands\nfrom the palette!', 1, 9, color`5`));
     },
     commands: [ Command.commandTypes.move ],
     commandSlots: 3,
@@ -842,12 +894,7 @@ const levels = [
       ephemeralObjects.push(new Scrap(11, 4));
 
       ephemeralObjects.push(new GameObject(1, 7, bitmaps.inputLeftVertical.key));
-      ephemeralText.push(textManager.addText({
-        text: 'set loop amount',
-        x: 3,
-        y: 10,
-        color: color`5`
-      }));
+      ephemeralText.push(new Text('set loop amount', 3, 10, color`5`));
     },
     commands: [ Command.commandTypes.move, Command.commandTypes.loop, Command.commandTypes.loopEnd ],
     commandSlots: 12,
@@ -884,8 +931,8 @@ const game = {
   reset() {
     if (this.inputHintSelect) this.inputHintSelect.remove();
     if (this.inputHintConfirm) this.inputHintConfirm.remove();
-    if (this.selectText !== null) textManager.removeText(this.selectText);
-    if (this.confirmText !== null) textManager.removeText(this.confirmText);
+    if (this.selectText) this.selectText.remove();
+    if (this.confirmText !== null) this.confirmText.remove();
     this.commands.forEach((obj) => obj.remove());
     this.commandSlots.forEach((obj) => obj.remove());
 
@@ -893,16 +940,8 @@ const game = {
     this.inputHintSelect = new GameObject(0, 10, bitmaps.inputLeftHorizontal.key);
     this.inputHintConfirm = new GameObject(7, 10, bitmaps.inputRightDown.key);
 
-    this.selectText = textManager.addText({
-      text: 'Select',
-      x: 2,
-      y: 15
-    });
-    this.confirmText = textManager.addText({
-      text: 'Confirm',
-      x: 12,
-      y: 15
-    });
+    this.selectText = new Text('Select', 2, 15);
+    this.confirmText = new Text('Confirm', 12, 15);
 
     // Commands
     this.currentSlot = 0;
@@ -994,8 +1033,7 @@ const game = {
 
   reloadLevel(level) {
     this.ephemeralObjects.forEach((obj) => obj.remove());
-    this.ephemeralText.forEach((id) => textManager.removeText(id));
-    this.ephemeralText.splice(0, this.ephemeralText.length);
+    this.ephemeralText.forEach((text) => text.remove());
     setMap(level.map);
     level.onLoad(this.ephemeralObjects, this.ephemeralText);
     this.reset();
