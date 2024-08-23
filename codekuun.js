@@ -516,7 +516,7 @@ const textManager = {
   },
 
   removeText(index) {
-    this.texts.splice(index, 1);
+    this.texts[index] = null;
 
     this.updateText();
   },
@@ -525,11 +525,13 @@ const textManager = {
     clearText();
 
     this.texts.forEach((text) => {
-      addText(text.text, {
-        x: text.x,
-        y: text.y,
-        color: text.color
-      });
+      if (text !== null) {
+        addText(text.text, {
+          x: text.x,
+          y: text.y,
+          color: text.color
+        });
+      }
     });
   }
 }
@@ -993,7 +995,7 @@ const game = {
   reloadLevel(level) {
     this.ephemeralObjects.forEach((obj) => obj.remove());
     this.ephemeralText.forEach((id) => textManager.removeText(id));
-    this.ephemeralText = [];
+    this.ephemeralText.splice(0, this.ephemeralText.length);
     setMap(level.map);
     level.onLoad(this.ephemeralObjects, this.ephemeralText);
     this.reset();
