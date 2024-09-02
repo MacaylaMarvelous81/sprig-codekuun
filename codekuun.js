@@ -461,27 +461,6 @@ const bitmaps = {
   }
 };
 
-/*
-commandTurnRight
-bitmap`
-.22222222222222.
-2244444444444422
-2444444444444442
-2444422222244442
-2444244444424442
-2442444444442442
-2442444444242422
-2442444444422242
-2442444444442442
-2442444444444442
-2442444444442442
-2444244444424442
-2444422222244442
-2444444444444442
-2244444444444422
-.22222222222222.`
-*/
-
 const tunes = {
   select: tune`
 272.72727272727275: E5/272.72727272727275,
@@ -764,6 +743,7 @@ class Command extends GameObject {
     this.#selected = val;
     this.#updateSprite();
   }
+  get value() { return this.#value; }
 
   constructor(x, y, type, selected) {
     super(x, y, selected ? type.selected : type.default);
@@ -784,6 +764,20 @@ class Command extends GameObject {
       default:
         break;
     }
+  }
+
+  incrementValue() {
+    if (this.#type !== Command.commandTypes.loop) return false;
+
+    this.#value++;
+    return true;
+  }
+
+  decrementValue() {
+    if (this.#type !== Command.commandTypes.loop) return false;
+
+    this.#value--;
+    return true;
   }
 
   #updateSprite() {
@@ -822,7 +816,7 @@ const levels = [
       ephemeralObjects.push(new Controllable(5, 4, 'right'));
       ephemeralObjects.push(new Scrap(8, 4));
 
-      ephemeralText.push(new Text('Choose commands\nfrom the palette!', 1, 9, color`5`));
+      ephemeralText.push(new Text('Choose commands\nbelow!', 1, 9, color`5`));
     },
     commands: [ Command.commandTypes.move ],
     commandSlots: 3,
@@ -865,7 +859,7 @@ const levels = [
       ephemeralObjects.push(new Scrap(11, 4));
 
       ephemeralObjects.push(new GameObject(1, 7, bitmaps.inputLeftVertical.key));
-      ephemeralText.push(new Text('set loop amount', 1, 9, color`5`));
+      ephemeralText.push(new Text('set loop amount', 3, 10, color`5`));
     },
     commands: [ Command.commandTypes.move, Command.commandTypes.loop, Command.commandTypes.loopEnd ],
     commandSlots: 12,
