@@ -482,7 +482,8 @@ const inputs = {
   menuRight: 'd',
   menuConfirm: 'k',
   valueUp: 'w',
-  valueDown: 's'
+  valueDown: 's',
+  testAdvance: 'l'
 };
 
 class Text {
@@ -732,6 +733,7 @@ class Command extends GameObject {
   #type = '';
   #selected = false;
   #value = 0;
+  #valueText;
 
   get type() { return this.#type; }
   set type(val) {
@@ -770,6 +772,7 @@ class Command extends GameObject {
     if (this.#type !== Command.commandTypes.loop) return false;
 
     this.#value++;
+    this.#updateSprite();
     return true;
   }
 
@@ -777,11 +780,20 @@ class Command extends GameObject {
     if (this.#type !== Command.commandTypes.loop) return false;
 
     this.#value--;
+    this.#updateSprite();
     return true;
   }
 
   #updateSprite() {
     this.sprite = this.#selected ? this.#type.selected : this.#type.default;
+
+    if (this.#type === Command.commandTypes.loop) {
+      if (!this.#valueText) {
+        this.#valueText = new Text(this.#value.toString(), this.x, this.y, color`7`);
+      } else {
+        this.#valueText.text = this.#value.toString();
+      }
+    }
   }
 }
 
@@ -1037,3 +1049,5 @@ onInput(inputs.menuRight, () => game.moveSelection('right'));
 onInput(inputs.valueUp, () => game.incrementSelectedValue());
 onInput(inputs.valueDown, () => game.decrementSelectedValue());
 onInput(inputs.menuConfirm, () => game.selectCommand());
+
+onInput(inputs.testAdvance, () => game.reloadLevel(levels[++level]));
