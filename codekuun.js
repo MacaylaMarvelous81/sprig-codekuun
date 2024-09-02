@@ -563,35 +563,6 @@ class Text {
     });
   }
 }
-const textManager = {
-  texts: [],
-  
-  addText(info) {
-    const id = this.texts.push(info);
-    this.updateText();
-    return id;
-  },
-
-  removeText(index) {
-    this.texts[index] = null;
-
-    this.updateText();
-  },
-
-  updateText() {
-    clearText();
-
-    this.texts.forEach((text) => {
-      if (text !== null) {
-        addText(text.text, {
-          x: text.x,
-          y: text.y,
-          color: text.color
-        });
-      }
-    });
-  }
-}
 
 class GameObject {
   static sprites = {};
@@ -894,7 +865,7 @@ const levels = [
       ephemeralObjects.push(new Scrap(11, 4));
 
       ephemeralObjects.push(new GameObject(1, 7, bitmaps.inputLeftVertical.key));
-      ephemeralText.push(new Text('set loop amount', 3, 10, color`5`));
+      ephemeralText.push(new Text('set loop amount', 1, 9, color`5`));
     },
     commands: [ Command.commandTypes.move, Command.commandTypes.loop, Command.commandTypes.loopEnd ],
     commandSlots: 12,
@@ -905,6 +876,27 @@ const levels = [
 .888888888888.
 .8..........8.
 .888888888888.
+..............
+..............
+88888888888888
+..............
+..............`
+  },
+  {
+    onLoad(ephemeralObjects, ephemeralText) {
+      ephemeralObjects.push(new Scrap(11, 4));
+      
+      ephemeralText.push(new Text('dummy level', 1, 9, color`3`));
+    },
+    commands: [],
+    commandSlots: 0,
+    map: map`
+..............
+88888888888888
+..............
+..............
+..............
+..............
 ..............
 ..............
 88888888888888
@@ -995,7 +987,7 @@ const game = {
 
         GameObject.step();
         
-        if (state.instr !== this.commandSlots.length - 1) {
+        if (state.instr !== this.commandSlots.length - 1 && this.commandSlots[state.instr + 1].type !== Command.commandTypes.empty) {
           // No loop ends or anything. Proceed to next instruction.
           setTimeout(step({ instr: state.instr + 1 }), 500);
         } else {
@@ -1004,10 +996,10 @@ const game = {
           // Reload the level or load the next level depending if all scraps were successfully
           // collected or not
           if (scrapCount === 0) {
-            this.reloadLevel(levels[++level]);
-          } else {
-            this.reloadLevel(levels[level]);
+            level++;
           }
+
+          this.reloadLevel(levels[level]);
         }
       };
 
@@ -1035,8 +1027,8 @@ const game = {
     this.ephemeralObjects.forEach((obj) => obj.remove());
     this.ephemeralText.forEach((text) => text.remove());
     setMap(level.map);
-    level.onLoad(this.ephemeralObjects, this.ephemeralText);
     this.reset();
+    level.onLoad(this.ephemeralObjects, this.ephemeralText);
   }
 };
 
