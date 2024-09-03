@@ -805,25 +805,21 @@ class Scrap extends GameObject {
 const levels = [
   {
     onLoad(ephemeralObjects, ephemeralText) {
-      ephemeralObjects.push(new Controllable(5, 4, 'right'));
-      ephemeralObjects.push(new Scrap(8, 4));
+      ephemeralObjects.push(new Controllable(1, 1, 'right'));
+      ephemeralObjects.push(new Scrap(4, 1));
 
-      ephemeralText.push(new Text('Choose commands\nbelow!', 1, 9, color`5`));
+      ephemeralObjects.push(new GameObject(0, 2, bitmaps.inputLeftHorizontal.key));
+      ephemeralObjects.push(new GameObject(3, 2, bitmaps.inputRightDown.key));
+      ephemeralText.push(new Text('Move', 4, 9, color`0`));
+      ephemeralText.push(new Text('Select', 14, 9, color`0`));
     },
     commands: [ Command.commandTypes.move ],
     commandSlots: 3,
     map: map`
-..............
-88888888888888
-..............
-....888888....
-....8....8....
-....888888....
-..............
-..............
-88888888888888
-..............
-..............`
+......
+......
+......
+......`
   },
   {
     onLoad(ephemeralObjects, ephemeralText) {
@@ -832,18 +828,7 @@ const levels = [
     },
     commands: [ Command.commandTypes.move, Command.commandTypes.turnRight ],
     commandSlots: 9,
-    map: map`
-..............
-88888888888888
-..............
-...88888888...
-...8,,,...8...
-...8.8888.8...
-...888..888...
-..............
-88888888888888
-..............
-..............`
+    map: map``
   },
   {
     onLoad(ephemeralObjects, ephemeralText) {
@@ -855,18 +840,7 @@ const levels = [
     },
     commands: [ Command.commandTypes.move, Command.commandTypes.loop, Command.commandTypes.loopEnd ],
     commandSlots: 12,
-    map: map`
-..............
-88888888888888
-..............
-.888888888888.
-.8..........8.
-.888888888888.
-..............
-..............
-88888888888888
-..............
-..............`
+    map: map``
   },
   {
     onLoad(ephemeralObjects, ephemeralText) {
@@ -876,28 +850,13 @@ const levels = [
     },
     commands: [],
     commandSlots: 0,
-    map: map`
-..............
-88888888888888
-..............
-..............
-..............
-..............
-..............
-..............
-88888888888888
-..............
-..............`
+    map: map``
   }
 ];
 
 let level = 0;
 
 const game = {
-  inputHintSelect: null,
-  inputHintConfirm: null,
-  selectText: null,
-  confirmText: null,
   commands: [],
   commandSlots: [],
   selected: 0,
@@ -907,19 +866,8 @@ const game = {
   ephemeralText: [],
   
   reset() {
-    if (this.inputHintSelect) this.inputHintSelect.remove();
-    if (this.inputHintConfirm) this.inputHintConfirm.remove();
-    if (this.selectText) this.selectText.remove();
-    if (this.confirmText !== null) this.confirmText.remove();
     this.commands.forEach((obj) => obj.remove());
     this.commandSlots.forEach((obj) => obj.remove());
-
-    // Controller hints
-    this.inputHintSelect = new GameObject(0, 10, bitmaps.inputLeftHorizontal.key);
-    this.inputHintConfirm = new GameObject(7, 10, bitmaps.inputRightDown.key);
-
-    this.selectText = new Text('Select', 2, 15);
-    this.confirmText = new Text('Confirm', 12, 15);
 
     // Commands
     this.currentSlot = 0;
@@ -929,9 +877,9 @@ const game = {
     }
 
     this.selected = 0;
-    this.commands = levels[level].commands.map((type, index) => new Command(index + 1, 9, type, index === 0));
-    this.commands.push(new Command(this.commands.length + 1, 9, Command.commandTypes.erase, false));
-    this.commands.push(new Command(this.commands.length + 1, 9, Command.commandTypes.run, false));
+    this.commands = levels[level].commands.map((type, index) => new Command(index + 1, height() - 1, type, index === 0));
+    this.commands.push(new Command(this.commands.length + 1, height() - 1, Command.commandTypes.erase, false));
+    this.commands.push(new Command(this.commands.length + 1, height() - 1, Command.commandTypes.run, false));
     
     this.canSelect = true;
   },
