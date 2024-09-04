@@ -624,9 +624,9 @@ class Controllable extends GameObject {
   }
 
   move(direction) {
-    if (direction === 'up') {
+    if (direction === 'up' && this.y > 1) {
       this.y -= 1;
-    } else if (direction === 'down') {
+    } else if (direction === 'down' && this.y < height() - 2) {
       this.y += 1;
     } else if (direction === 'left') {
       this.x -= 1;
@@ -823,24 +823,32 @@ const levels = [
   },
   {
     onLoad(ephemeralObjects, ephemeralText) {
-      ephemeralObjects.push(new Controllable(4, 5, 'up'));
-      ephemeralObjects.push(new Scrap(9, 5));
+      ephemeralObjects.push(new Controllable(2, 2, 'up'));
+      ephemeralObjects.push(new Scrap(4, 2));
     },
     commands: [ Command.commandTypes.move, Command.commandTypes.turnRight ],
-    commandSlots: 9,
-    map: map``
+    commandSlots: 6,
+    map: map`
+........
+.8...8..
+.8.8.8..
+........`
   },
   {
     onLoad(ephemeralObjects, ephemeralText) {
-      ephemeralObjects.push(new Controllable(2, 4, 'right'));
-      ephemeralObjects.push(new Scrap(11, 4));
+      ephemeralObjects.push(new Controllable(1, 1, 'right'));
+      ephemeralObjects.push(new Scrap(6, 1));
 
-      ephemeralObjects.push(new GameObject(1, 7, bitmaps.inputLeftVertical.key));
-      ephemeralText.push(new Text('set loop amount', 3, 10, color`5`));
+      ephemeralObjects.push(new GameObject(0, 2, bitmaps.inputLeftVertical.key));
+      ephemeralText.push(new Text('set loop amount', 3, 9, color`5`));
     },
     commands: [ Command.commandTypes.move, Command.commandTypes.loop, Command.commandTypes.loopEnd ],
-    commandSlots: 12,
-    map: map``
+    commandSlots: 3,
+    map: map`
+........
+........
+........
+........`
   },
   {
     onLoad(ephemeralObjects, ephemeralText) {
