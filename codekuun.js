@@ -1,6 +1,6 @@
 const bitmaps = {
   controllableUp: {
-    key: '`',
+    key: '~',
     sprite: bitmap`
 .....0....0.....
 ....00000000....
@@ -537,6 +537,8 @@ class GameObject {
   set y(val) { this.#sprigSprite.y = val; }
   get sprite() { return this.#sprigSprite.type; }
   set sprite(val) {
+    if (this.sprite === val) return;
+    
     const x = this.x;
     const y = this.y;
 
@@ -732,6 +734,8 @@ class Command extends GameObject {
 
     this.#type = type;
     this.#selected = selected;
+
+    this.#updateSprite();
   }
 
   execute() {
@@ -769,7 +773,11 @@ class Command extends GameObject {
 
     if (this.#type === Command.commandTypes.loop) {
       if (!this.#valueText) {
-        this.#valueText = new Text(this.#value.toString(), this.x, this.y, color`7`);
+        // In a 10x8 map, a tile can fit 2 characters of text horizontally and
+        // vertically; thus, the text is in a grid aligned to that of the map
+        // with double the size. Thus it is necessary for the map size to be
+        // 10x8 -- at least when this technique is in use.
+        this.#valueText = new Text(this.#value.toString(), this.x * 2, this.y * 2, color`2`);
       } else {
         this.#valueText.text = this.#value.toString();
       }
@@ -802,6 +810,10 @@ class Scrap extends GameObject {
   }
 }
 
+// Map size is 10x8 so the map fits the 160x128 screen. In keeping the map size
+// consistent across all levels, the 'hud' elements such as the commands and the
+// command palette do not change size nor position, so the map change won't be
+// as jarring.
 const levels = [
   {
     onLoad(ephemeralObjects, ephemeralText) {
@@ -816,10 +828,14 @@ const levels = [
     commands: [ Command.commandTypes.move ],
     commandSlots: 3,
     map: map`
-......
-......
-......
-......`
+..........
+..........
+..........
+..........
+..........
+..........
+..........
+..........`
   },
   {
     onLoad(ephemeralObjects, ephemeralText) {
@@ -829,10 +845,14 @@ const levels = [
     commands: [ Command.commandTypes.move, Command.commandTypes.turnRight ],
     commandSlots: 6,
     map: map`
-........
-.8...8..
-.8.8.8..
-........`
+..........
+.8...8....
+.8.8.8....
+..........
+..........
+..........
+..........
+..........`
   },
   {
     onLoad(ephemeralObjects, ephemeralText) {
@@ -844,11 +864,9 @@ const levels = [
     },
     commands: [ Command.commandTypes.move, Command.commandTypes.loop, Command.commandTypes.loopEnd ],
     commandSlots: 3,
-    map: map`
-........
-........
-........
-........`
+    // For some reason this map keeps eating up all my editor edits. If I edit a map or
+    // color it edits this string literal even if I didn't click on this. WHY!??!
+    map: map`2`
   },
   {
     onLoad(ephemeralObjects, ephemeralText) {
@@ -858,7 +876,15 @@ const levels = [
     },
     commands: [],
     commandSlots: 0,
-    map: map``
+    map: map`
+..........
+..........
+..........
+..........
+..........
+..........
+..........
+..........`
   }
 ];
 
