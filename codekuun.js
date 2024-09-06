@@ -777,7 +777,7 @@ class Command extends GameObject {
         // vertically; thus, the text is in a grid aligned to that of the map
         // with double the size. Thus it is necessary for the map size to be
         // 10x8 -- at least when this technique is in use.
-        this.#valueText = new Text(this.#value.toString(), this.x * 2, this.y * 2, color`2`);
+        this.#valueText = new Text(this.#value.toString(), this.x * 2, this.y * 2, color`5`);
       } else {
         this.#valueText.text = this.#value.toString();
       }
@@ -817,13 +817,13 @@ class Scrap extends GameObject {
 const levels = [
   {
     onLoad(ephemeralObjects, ephemeralText) {
-      ephemeralObjects.push(new Controllable(1, 1, 'right'));
-      ephemeralObjects.push(new Scrap(4, 1));
+      ephemeralObjects.push(new Controllable(3, 3, 'right'));
+      ephemeralObjects.push(new Scrap(6, 3));
 
-      ephemeralObjects.push(new GameObject(0, 2, bitmaps.inputLeftHorizontal.key));
-      ephemeralObjects.push(new GameObject(3, 2, bitmaps.inputRightDown.key));
-      ephemeralText.push(new Text('Move', 4, 9, color`0`));
-      ephemeralText.push(new Text('Select', 14, 9, color`0`));
+      ephemeralObjects.push(new GameObject(0, 6, bitmaps.inputLeftHorizontal.key));
+      ephemeralObjects.push(new GameObject(4, 6, bitmaps.inputRightDown.key));
+      ephemeralText.push(new Text('Move', 2, 13, color`0`));
+      ephemeralText.push(new Text('Select', 10, 13, color`0`));
     },
     commands: [ Command.commandTypes.move ],
     commandSlots: 3,
@@ -846,10 +846,10 @@ const levels = [
     commandSlots: 6,
     map: map`
 ..........
-.8...8....
-.8.8.8....
 ..........
+...8.8....
 ..........
+..8.......
 ..........
 ..........
 ..........`
@@ -864,9 +864,15 @@ const levels = [
     },
     commands: [ Command.commandTypes.move, Command.commandTypes.loop, Command.commandTypes.loopEnd ],
     commandSlots: 3,
-    // For some reason this map keeps eating up all my editor edits. If I edit a map or
-    // color it edits this string literal even if I didn't click on this. WHY!??!
-    map: map`2`
+    map: map`
+..........
+..........
+..........
+..........
+..........
+..........
+..........
+..........`
   },
   {
     onLoad(ephemeralObjects, ephemeralText) {
