@@ -754,6 +754,7 @@ class Command extends GameObject {
 
   incrementValue() {
     if (this.#type !== Command.commandTypes.loop) return false;
+    if (this.#value >= 9) return false;
 
     this.#value++;
     this.#updateSprite();
@@ -762,6 +763,7 @@ class Command extends GameObject {
 
   decrementValue() {
     if (this.#type !== Command.commandTypes.loop) return false;
+    if (this.#value <= 0) return false;
 
     this.#value--;
     this.#updateSprite();
