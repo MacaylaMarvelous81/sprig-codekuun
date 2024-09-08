@@ -712,9 +712,10 @@ class Command extends GameObject {
     }
   };
 
+  value = 0;
+
   #type = '';
   #selected = false;
-  #value = 0;
   #valueText;
 
   get type() { return this.#type; }
@@ -727,7 +728,6 @@ class Command extends GameObject {
     this.#selected = val;
     this.#updateSprite();
   }
-  get value() { return this.#value; }
 
   constructor(x, y, type, selected) {
     super(x, y, selected ? type.selected : type.default);
@@ -754,18 +754,18 @@ class Command extends GameObject {
 
   incrementValue() {
     if (this.#type !== Command.commandTypes.loop) return false;
-    if (this.#value >= 9) return false;
+    if (this.value >= 9) return false;
 
-    this.#value++;
+    this.value++;
     this.#updateSprite();
     return true;
   }
 
   decrementValue() {
     if (this.#type !== Command.commandTypes.loop) return false;
-    if (this.#value <= 0) return false;
+    if (this.value <= 0) return false;
 
-    this.#value--;
+    this.value--;
     this.#updateSprite();
     return true;
   }
@@ -779,9 +779,14 @@ class Command extends GameObject {
         // vertically; thus, the text is in a grid aligned to that of the map
         // with double the size. Thus it is necessary for the map size to be
         // 10x8 -- at least when this technique is in use.
-        this.#valueText = new Text(this.#value.toString(), this.x * 2, this.y * 2, color`1`);
+        this.#valueText = new Text(this.value.toString(), this.x * 2, this.y * 2, color`1`);
       } else {
-        this.#valueText.text = this.#value.toString();
+        this.#valueText.text = this.value.toString();
+      }
+    } else {
+      if (this.#valueText) {
+        this.#valueText.remove();
+        this.#valueText = null;
       }
     }
   }
@@ -982,8 +987,10 @@ const game = {
       step({ instr: 0 })();
     } else {
       if (this.currentSlot === this.commandSlots.length) return;
-      
-      this.commandSlots[this.currentSlot++].type = this.commands[this.selected].type;
+
+      this.commandSlots[this.currentSlot].value = this.commands[this.selected].value;
+      this.commandSlots[this.currentSlot].type = this.commands[this.selected].type;
+      this.currentSlot++;
     }
   },
 
