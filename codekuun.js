@@ -779,7 +779,7 @@ class Command extends GameObject {
         // vertically; thus, the text is in a grid aligned to that of the map
         // with double the size. Thus it is necessary for the map size to be
         // 10x8 -- at least when this technique is in use.
-        this.#valueText = new Text(this.value.toString(), this.x * 2, this.y * 2, color`1`);
+        this.#valueText = new Text(this.value.toString(), (this.x * 2) + 1, (this.y * 2) + 1, color`6`);
       } else {
         this.#valueText.text = this.value.toString();
       }
@@ -846,17 +846,17 @@ const levels = [
   },
   {
     onLoad(ephemeralObjects, ephemeralText) {
-      ephemeralObjects.push(new Controllable(2, 2, 'up'));
-      ephemeralObjects.push(new Scrap(4, 2));
+      ephemeralObjects.push(new Controllable(3, 4, 'up'));
+      ephemeralObjects.push(new Scrap(5, 4));
     },
     commands: [ Command.commandTypes.move, Command.commandTypes.turnRight ],
     commandSlots: 6,
     map: map`
 ..........
 ..........
-...8.8....
 ..........
-..8.......
+..........
+....8.....
 ..........
 ..........
 ..........`
@@ -866,8 +866,8 @@ const levels = [
       ephemeralObjects.push(new Controllable(1, 1, 'right'));
       ephemeralObjects.push(new Scrap(6, 1));
 
-      ephemeralObjects.push(new GameObject(0, 2, bitmaps.inputLeftVertical.key));
-      ephemeralText.push(new Text('set loop amount', 3, 9, color`5`));
+      ephemeralObjects.push(new GameObject(0, 6, bitmaps.inputLeftVertical.key));
+      ephemeralText.push(new Text('set iterations', 3, 12, color`5`));
     },
     commands: [ Command.commandTypes.move, Command.commandTypes.loop, Command.commandTypes.loopEnd ],
     commandSlots: 3,
@@ -964,13 +964,26 @@ const game = {
       this.commands[this.selected].selected = false;
 
       const step = (state) => () => {
+        if (this.commandSlots[state.instr].type === Command.commandTypes.loop && !state.loop.looping) {
+          state.loop.instr = state.instr;
+          state.loop.iterations = 0;
+          state.loop.looping = true;
+        } else if (this.commandSlots[state.instr].type === Command.commandTypes.loopEnd && state.loop.looping) {
+          if (++state.loop.iterations < this.commandSlots[state.loop.instr].value) {
+            state.instr = state.loop.instr;
+          } else {
+            state.loop.looping = false;
+          }
+        }
+        
         this.commandSlots[state.instr].execute();
 
         GameObject.step();
         
         if (state.instr !== this.commandSlots.length - 1 && this.commandSlots[state.instr + 1].type !== Command.commandTypes.empty) {
           // No loop ends or anything. Proceed to next instruction.
-          setTimeout(step({ instr: state.instr + 1 }), 500);
+          state.instr++;
+          setTimeout(step(state), 500);
         } else {
           const scrapCount = GameObject.getObjectsOfType(Scrap).length;
 
@@ -984,7 +997,14 @@ const game = {
         }
       };
 
-      step({ instr: 0 })();
+      step({
+        instr: 0,
+        loop: {
+          instr: 0,
+          iterations: 0,
+          looping: false
+        }
+      })();
     } else {
       if (this.currentSlot === this.commandSlots.length) return;
 
