@@ -866,6 +866,10 @@ const levels = [
       ephemeralObjects.push(new Controllable(1, 1, 'right'));
       ephemeralObjects.push(new Scrap(6, 1));
 
+      ephemeralText.push(new Text('commands between\nand  will loop', 1, 5));
+      ephemeralObjects.push(new GameObject(9, 2, bitmaps.commandLoop.key));
+      ephemeralObjects.push(new GameObject(2, 3, bitmaps.commandLoopEnd.key));
+
       ephemeralObjects.push(new GameObject(0, 6, bitmaps.inputLeftVertical.key));
       ephemeralText.push(new Text('set iterations', 3, 12, color`5`));
     },
