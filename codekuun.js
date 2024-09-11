@@ -1004,7 +1004,7 @@ const game = {
             level++;
           }
 
-          this.reloadLevel(levels[level]);
+          setTimeout(() => this.reloadLevel(levels[level]), 500);
         }
       };
 
