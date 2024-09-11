@@ -342,22 +342,22 @@ const bitmaps = {
   barrier: {
     key: '8',
     sprite: bitmap`
-....33333333....
-...3........3...
-..3..........3..
-.3.3..........3.
-3...3..........3
-3....3.........3
-3.....3........3
-3......3.......3
-3.......3......3
-3........3.....3
-3.........3....3
-3..........3...3
-.3..........3.3.
-..3..........3..
-...3........3...
-....33333333....`
+0000000000000000
+00LLLLLLLLLLLL00
+0L0LLLLLLLLLL010
+0LL0000000000110
+0LL00LLLLLL00110
+0LL0L0LLLL010110
+0LL0LL0000110110
+0LL0LL0110110110
+0LL0LL0110110110
+0LL0LL0000110110
+0LL0L01111010110
+0LL0011111100110
+0LL0000000000110
+0L01111111111010
+0011111111111100
+0000000000000000`
   },
   scrapCode: {
     key: 'w',
@@ -768,11 +768,11 @@ const levels = [
       ephemeralObjects.push(new Scrap(6, 2));
 
       ephemeralObjects.push(new GameObject(0, 3, bitmaps.commandMove.key));
-      ephemeralText.push(new Text('to move forward', 2, 7));
+      ephemeralText.push(new Text('to move forward', 2, 7, color`0`));
       ephemeralObjects.push(new GameObject(0, 4, bitmaps.commandErase.key));
-      ephemeralText.push(new Text('remove a command', 2, 9));
+      ephemeralText.push(new Text('remove a command', 2, 9, color`0`));
       ephemeralObjects.push(new GameObject(0, 5, bitmaps.commandRun.key));
-      ephemeralText.push(new Text('to run program', 2, 11));
+      ephemeralText.push(new Text('to run program', 2, 11, color`0`));
       
       ephemeralText.push(new Text('A/D-Move  K-Select', 1, 13, color`0`));
     },
@@ -780,7 +780,7 @@ const levels = [
     commandSlots: 3,
     map: map`
 ..........
-..........
+...8888...
 ..........
 ..........
 ..........
@@ -810,9 +810,9 @@ const levels = [
       ephemeralObjects.push(new Controllable(1, 1, 'right'));
       ephemeralObjects.push(new Scrap(6, 1));
 
-      ephemeralText.push(new Text('commands between\nand  will loop', 1, 5));
-      ephemeralObjects.push(new GameObject(9, 2, bitmaps.commandLoop.key));
-      ephemeralObjects.push(new GameObject(2, 3, bitmaps.commandLoopEnd.key));
+      ephemeralText.push(new Text('commands between\nand  will loop', 1, 7, color`0`));
+      ephemeralObjects.push(new GameObject(9, 3, bitmaps.commandLoop.key));
+      ephemeralObjects.push(new GameObject(2, 4, bitmaps.commandLoopEnd.key));
 
       ephemeralText.push(new Text('W/S-set iterations', 1, 12, color`0`));
     },
@@ -821,7 +821,7 @@ const levels = [
     map: map`
 ..........
 ..........
-..........
+.888888...
 ..........
 ..........
 ..........
@@ -838,12 +838,12 @@ const levels = [
     commandSlots: 7,
     map: map`
 ..........
-..........
-..........
-..........
-..........
-..........
-..........
+..8888888.
+..8.....8.
+..8.88888.
+..8.8.....
+..8.8.....
+..8.8.....
 ..........`
   },
   {
