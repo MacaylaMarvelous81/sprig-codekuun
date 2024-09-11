@@ -824,8 +824,15 @@ class Scrap extends GameObject {
 const levels = [
   {
     onLoad(ephemeralObjects, ephemeralText) {
-      ephemeralObjects.push(new Controllable(3, 3, 'right'));
-      ephemeralObjects.push(new Scrap(6, 3));
+      ephemeralObjects.push(new Controllable(3, 2, 'right'));
+      ephemeralObjects.push(new Scrap(6, 2));
+
+      ephemeralObjects.push(new GameObject(0, 3, bitmaps.commandMove.key));
+      ephemeralText.push(new Text('to move forward', 2, 7));
+      ephemeralObjects.push(new GameObject(0, 4, bitmaps.commandErase.key));
+      ephemeralText.push(new Text('remove a command', 2, 9));
+      ephemeralObjects.push(new GameObject(0, 5, bitmaps.commandRun.key));
+      ephemeralText.push(new Text('to run program', 2, 11));
 
       ephemeralObjects.push(new GameObject(0, 6, bitmaps.inputLeftHorizontal.key));
       ephemeralObjects.push(new GameObject(4, 6, bitmaps.inputRightDown.key));
