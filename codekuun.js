@@ -341,23 +341,61 @@ const bitmaps = {
   },
   barrier: {
     key: '8',
+    /*
+    bitmap`
+................
+................
+................
+.44D............
+..........444D..
+................
+......444D......
+................
+..44D...........
+..........444D..
+................
+.....44D........
+................
+..444D....44D...
+................
+................`
+*/
+    /*
     sprite: bitmap`
-0000000000000000
-00LLLLLLLLLLLL00
-0L0LLLLLLLLLL010
-0LL0000000000110
-0LL00LLLLLL00110
-0LL0L0LLLL010110
-0LL0LL0000110110
-0LL0LL0110110110
-0LL0LL0110110110
-0LL0LL0000110110
-0LL0L01111010110
-0LL0011111100110
-0LL0000000000110
-0L01111111111010
-0011111111111100
-0000000000000000`
+9999999999999999
+93.............9
+93.............9
+933...3...33...9
+93.3.3.3.3.....9
+9333..33.3.....9
+9..............9
+9.33.3...33..339
+93......33..3..9
+93...3...33.3..9
+9..............9
+9..............9
+9..............9
+9..............9
+9..............9
+9999999999999999`
+*/
+    sprite: bitmap`
+................
+................
+................
+................
+................
+................
+................
+................
+................
+................
+................
+................
+................
+................
+................
+................`
   },
   scrapCode: {
     key: 'w',
@@ -378,6 +416,206 @@ const bitmaps = {
 .00000000000000.
 .00000000000000.
 ................`
+  },
+  floor: {
+    key: '5',
+    sprite: bitmap`
+LLLLLLLLLLLLLLLL
+L11111111111111L
+L11111111111111L
+L11111111111111L
+L11111111111111L
+L11111111111111L
+L11111111111111L
+L11111111111111L
+L11111111111111L
+L11111111111111L
+L11111111111111L
+L11111111111111L
+L11111111111111L
+L11111111111111L
+L11111111111111L
+LLLLLLLLLLLLLLLL`
+  },
+  nest1: {
+    key: 'p',
+    sprite: bitmap`
+..........C.C.C.
+.........C.CCCCC
+........C.CLLLLL
+......C..CLCCCCC
+.....C.CCLLCCCCC
+....C.CLLCCCCCCC
+...C.CLCCCCCCCCC
+..C.CLCCCCCCCCCC
+...CCLCCCCCCCCCC
+.CCLLCCCCCCCCCCC
+..CLCCCCCCCCCCCC
+CCLCCCCCCCCCCCCC
+.CLCCCCCCCCCCCCC
+CCLCCCCCCCCCCCCC
+.CLCCCCCCCCCCCCC
+CCLCCCCCCCCCCCCC`
+  },
+  nest2: {
+    key: '[',
+    sprite: bitmap`
+C.C.C.C.C.C.C.C.
+CCCCCCCCCCCCCCCC
+LLLLLLLLLLLLLLLL
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC`
+  },
+  nest3: {
+    key: ']',
+    sprite: bitmap`
+C.C.C...........
+CCCCC.C.........
+LLLLLCC.C.......
+CCCCCLLC.C......
+CCCCCCLCC.C.....
+CCCCCCCLLC.C....
+CCCCCCCCCLC.C...
+CCCCCCCCCCLC....
+CCCCCCCCCCLC.C..
+CCCCCCCCCCCLC.C.
+CCCCCCCCCCCLLC.C
+CCCCCCCCCCCCCLC.
+CCCCCCCCCCCCCLCC
+CCCCCCCCCCCCCLC.
+CCCCCCCCCCCCCLCC
+CCCCCCCCCCCCCLC.`
+  },
+  nest4: {
+    key: 'a',
+    sprite: bitmap`
+.CLCCCCCCCCCCCCC
+CCLCCCCCCCCCCCCC
+.CLCCCCCCCCCCCCC
+CCLCCCCCCCCCCCCC
+.CLCCCCCCCCCCCCC
+CCLCCCCCCCCCCCCC
+.CLCCCCCCCCCCCCC
+CCLCCCCCCCCCCCCC
+.CLCCCCCCCCCCCCC
+CCLCCCCCCCCCCCCC
+.CLCCCCCCCCCCCCC
+CCLCCCCCCCCCCCCC
+.CLCCCCCCCCCCCCC
+CCLCCCCCCCCCCCCC
+.CLCCCCCCCCCCCCC
+CCLCCCCCCCCCCCCC`
+  },
+  nest5: {
+    key: 's',
+    sprite: bitmap`
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC`
+  },
+  nest6: {
+    key: 'd',
+    sprite: bitmap`
+CCCCCCCCCCCCCLC.
+CCCCCCCCCCCCCLCC
+CCCCCCCCCCCCCLC.
+CCCCCCCCCCCCCLCC
+CCCCCCCCCCCCCLC.
+CCCCCCCCCCCCCLCC
+CCCCCCCCCCCCCLC.
+CCCCCCCCCCCCCLCC
+CCCCCCCCCCCCCLC.
+CCCCCCCCCCCCCLCC
+CCCCCCCCCCCCCLC.
+CCCCCCCCCCCCCLCC
+CCCCCCCCCCCCCLC.
+CCCCCCCCCCCCCLCC
+CCCCCCCCCCCCCLC.
+CCCCCCCCCCCCCLCC`
+  },
+  nest7: {
+    key: 'f',
+    sprite: bitmap`
+CCLCCCCCCCCCCCCC
+.CLCCCCCCCCCCCCC
+CCLCCCCCCCCCCCCC
+.CLCCCCCCCCCCCCC
+CCLCCCCCCCCCCCCC
+..CLCCCCCCCCCCCC
+.CCLLCCCCCCCCCCC
+...CCLCCCCCCCCCC
+..C.CLCCCCCCCCCC
+...C.CLCCCCCCCCC
+....C.CLLCCCCCCC
+.....C.CCLLCCCCC
+......C..CLCCCCC
+........C.CLLLLL
+.........C.CCCCC
+..........C.C.C.`
+  },
+  nest8: {
+    key: 'g',
+    sprite: bitmap`
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+CCCCCCCCCCCCCCCC
+LLLLLLLLLLLLLLLL
+CCCCCCCCCCCCCCCC
+C.C.C.C.C.C.C.C.`
+  },
+  nest9: {
+    key: 'h',
+    sprite: bitmap`
+CCCCCCCCCCCCCLCC
+CCCCCCCCCCCCCLC.
+CCCCCCCCCCCCCLCC
+CCCCCCCCCCCCCLC.
+CCCCCCCCCCCCCLCC
+CCCCCCCCCCCCLC..
+CCCCCCCCCCCLLCC.
+CCCCCCCCCCLCC...
+CCCCCCCCCCLC.C..
+CCCCCCCCCLC.C...
+CCCCCCCLLC.C....
+CCCCCLLCC.C.....
+CCCCCLC..C......
+LLLLLC.C........
+CCCCC.C.........
+.C.C.C..........`
   }
 };
 
@@ -781,8 +1019,8 @@ const levels = [
     map: map`
 ..........
 ...8888...
-..........
-..........
+..855558..
+...8888...
 ..........
 ..........
 ..........
@@ -792,23 +1030,25 @@ const levels = [
     onLoad(ephemeralObjects, ephemeralText) {
       ephemeralObjects.push(new Controllable(3, 4, 'up'));
       ephemeralObjects.push(new Scrap(5, 4));
+
+      ephemeralText.push(new Text('only the gray floor\ncan be traversed', 1, 10, color`0`));
     },
     commands: [ Command.commandTypes.move, Command.commandTypes.turnRight ],
     commandSlots: 6,
     map: map`
 ..........
 ..........
-..........
-..........
-....8.....
-..........
+...888....
+..85558...
+..85858...
+...8.8....
 ..........
 ..........`
   },
   {
     onLoad(ephemeralObjects, ephemeralText) {
-      ephemeralObjects.push(new Controllable(1, 1, 'right'));
-      ephemeralObjects.push(new Scrap(6, 1));
+      ephemeralObjects.push(new Controllable(2, 1, 'right'));
+      ephemeralObjects.push(new Scrap(7, 1));
 
       ephemeralText.push(new Text('commands between\nand  will loop', 1, 7, color`0`));
       ephemeralObjects.push(new GameObject(9, 3, bitmaps.commandLoop.key));
@@ -820,8 +1060,8 @@ const levels = [
     commandSlots: 3,
     map: map`
 ..........
-..........
-.888888...
+.85555558.
+..888888..
 ..........
 ..........
 ..........
@@ -838,28 +1078,29 @@ const levels = [
     commandSlots: 7,
     map: map`
 ..........
-..8888888.
-..8.....8.
-..8.88888.
-..8.8.....
-..8.8.....
-..8.8.....
+...88888..
+..8555558.
+..858888..
+..858.....
+..858.....
+..858.....
 ..........`
   },
   {
     onLoad(ephemeralObjects, ephemeralText) {
-      ephemeralObjects.push(new Scrap(11, 4));
+      ephemeralObjects.push(new GameObject(2, 2, bitmaps.scrapCode.key));
+      ephemeralObjects.push(new GameObject(3, 3, bitmaps.scrapCode.key));
       
-      ephemeralText.push(new Text('dummy level', 1, 9, color`3`));
+      ephemeralText.push(new Text('Nice! Now Heidi has\na nest full of\nscraps!', 1, 10, color`8`));
     },
     commands: [],
     commandSlots: 0,
     map: map`
 ..........
 ..........
-..........
-..........
-..........
+..p[].....
+..asd.2...
+..fgh.....
 ..........
 ..........
 ..........`
