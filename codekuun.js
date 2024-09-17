@@ -594,7 +594,22 @@ const tunes = {
 82.1917808219178: A5/82.1917808219178,
 82.1917808219178: A5/82.1917808219178,
 82.1917808219178: A5/82.1917808219178,
-2219.1780821917805`
+2219.1780821917805`,
+  victory: tune`
+333.3333333333333: F5-333.3333333333333,
+333.3333333333333: F5-333.3333333333333,
+333.3333333333333: F5-333.3333333333333,
+333.3333333333333: C5-333.3333333333333,
+333.3333333333333: C5-333.3333333333333,
+333.3333333333333: C5-333.3333333333333,
+333.3333333333333: F5-333.3333333333333,
+333.3333333333333: C5-333.3333333333333,
+333.3333333333333: F5-333.3333333333333,
+333.3333333333333: G5-333.3333333333333,
+333.3333333333333: F5-333.3333333333333,
+333.3333333333333,
+333.3333333333333: C5-333.3333333333333,
+6333.333333333333`
 };
 
 const inputs = {
@@ -602,8 +617,7 @@ const inputs = {
   menuRight: 'd',
   menuConfirm: 'k',
   valueUp: 'w',
-  valueDown: 's',
-  testAdvance: 'l'
+  valueDown: 's'
 };
 
 class Text {
@@ -1053,7 +1067,9 @@ const levels = [
       ephemeralObjects.push(new GameObject(2, 2, bitmaps.scrapCode.key));
       ephemeralObjects.push(new GameObject(3, 3, bitmaps.scrapCode.key));
       
-      ephemeralText.push(new Text('Nice! Now Heidi has\na nest full of\nscraps!', 1, 10, color`8`));
+      ephemeralText.push(new Text('Nice job! Now Heidi\nhas a nest full of\nscraps!', 1, 11, color`8`));
+
+      playTune(tunes.victory);
     },
     commands: [],
     commandSlots: 0,
@@ -1083,6 +1099,12 @@ const game = {
   reset() {
     this.commands.forEach((obj) => obj.remove());
     this.commandSlots.forEach((obj) => obj.remove());
+
+    // Last level is the win screen, there's no controls.
+    if (level === levels.length - 1) {
+      this.canSelect = false;
+      return;
+    }
 
     // Commands
     this.currentSlot = 0;
@@ -1214,5 +1236,3 @@ onInput(inputs.menuRight, () => game.moveSelection('right'));
 onInput(inputs.valueUp, () => game.incrementSelectedValue());
 onInput(inputs.valueDown, () => game.decrementSelectedValue());
 onInput(inputs.menuConfirm, () => game.selectCommand());
-
-onInput(inputs.testAdvance, () => game.reloadLevel(levels[++level]));
